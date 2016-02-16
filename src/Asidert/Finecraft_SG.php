@@ -102,7 +102,7 @@ class Finecraft_SG extends PluginBase implements Listener
 		$this->SetStatus=array();
 		$this->all=0;
 		$this->config->save();
-		$this->getServer()->getLogger()->info(TextFormat::GREEN."[Finecraft_SG] Uploaded !");
+		$this->getServer()->getLogger()->info(TextFormat::GREEN."[Finecraft_SG] loaded !");
 	}
 	
 	public function onCommand(CommandSender $sender, Command $command, $label, array $args)
@@ -413,6 +413,9 @@ class Finecraft_SG extends PluginBase implements Listener
 			switch($this->lastTime)
 			{
 			case 1:
+				$p->setMaxHealth(20);
+				$p->setHealth(20);
+				$p->setFood(20)
 			case 2:
 			case 3:
 			case 4:
@@ -475,6 +478,7 @@ class Finecraft_SG extends PluginBase implements Listener
 					$p->getInventory()->clearAll();
 					$p->setMaxHealth(20);
 					$p->setHealth(20);
+					$p->setFood(20)
 					$p->teleport($this->signlevel->getSpawnLocation());
 					unset($pl,$p);
 				}
@@ -642,19 +646,19 @@ class Finecraft_SG extends PluginBase implements Listener
 			switch($this->gameStatus)
 			{
 			case 0:
-				$sign->setText("§l§e《[SG]》","§l§aZhmyakni!","§l§aplayers:".count($this->players),"");
+				$sign->setText("§7[§aJoin§7] §b:§9".count($this->players)."§9/16","§l§fMap:§r §b$Arena","§eSG 1");
 				break;
 			case 1:
-				$sign->setText("§l§e《[SG]》","§l§aZhmyakni!","§l§aplayers:".count($this->players),"§l§bTime:".$this->lastTime."Seconds.");
+				$sign->setText("§7[§aJoin§7] §b:§9".count($this->players)."§9/24","§l§fMap:§r §b$Arena","§eSG 1");
 				break;
 			case 2:
-				$sign->setText("§l§e《[SG]》","§l§dStart Soon","§l§aplayers:".count($this->players),"§l§bTime:".$this->lastTime."seconds.");
+				$sign->setText("§7[§5Running§7] §b:§9".count($this->players)."§9/24","§l§fMap§r §b$Arena","§eSG 1");
 				break;
 			case 3:
-				$sign->setText("§l§e《[SG]》","§l§fGame in progress","§l§aplayers:".count($this->players)."/{$this->all}","§l§bTime:".$this->lastTime."seconds.");
+				$sign->setText("§7[§5Running§7] §b:§9".count($this->players)."§9/24","§l§fMap:§r §b$Arena","§eSG 1");
 				break;
 			case 4:
-				$sign->setText("§l§e《[SG]》","§l§cSafe","§l§aplayers :".count($this->players)."/{$this->all}","§l§bTime:".$this->lastTime."seconds.");
+				$sign->setText("§7[§cDM§7] §b:§9".count($this->players)."§9/24","§l§fMap:§r §b$Arena","§eSG 1");
 				break;
 			}
 		}
@@ -818,7 +822,7 @@ class Finecraft_SG extends PluginBase implements Listener
 			{
 				if(!$this->config->exists("lastpos"))
 				{
-					$event->getPlayer()->sendMessage("[SG] You can not go, Sat spawn is not installed");
+					$event->getPlayer()->sendMessage("[SG] You can not go, Set spawn is not installed");
 					return;
 				}
 				if(!$event->getPlayer()->hasPermission("FSurvivalGame.touch.startgame"))

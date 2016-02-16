@@ -102,7 +102,7 @@ class Finecraft_SG extends PluginBase implements Listener
 		$this->SetStatus=array();
 		$this->all=0;
 		$this->config->save();
-		$this->getServer()->getLogger()->info(TextFormat::GREEN."[Finecraft_SG] Загружено !");
+		$this->getServer()->getLogger()->info(TextFormat::GREEN."[Finecraft_SG] Uploaded !");
 	}
 	
 	public function onCommand(CommandSender $sender, Command $command, $label, array $args)
@@ -111,7 +111,7 @@ class Finecraft_SG extends PluginBase implements Listener
 		{
 			if($this->gameStatus>=2)
 			{
-				$sender->sendMessage("[SG] Игра уже началась вы не можете вернуться в лобби");
+				$sender->sendMessage("[SG] The game has already started, you can not go back to the lobby");
 				return;
 			}
 			if(isset($this->players[$sender->getName()]))
@@ -119,14 +119,14 @@ class Finecraft_SG extends PluginBase implements Listener
 				unset($this->players[$sender->getName()]);
 				$sender->setLevel($this->signlevel);
 				$sender->teleport($this->signlevel->getSpawnLocation());
-				$sender->sendMessage("[SG] Возвращение в Лобби...");
-				$this->sendToAll("[SG] ".$sender->getName()." покинул арену.");
+				$sender->sendMessage("[SG] Return to Lobby...");
+				$this->sendToAll("[SG] ".$sender->getName()." left the arena.");
 				$this->changeStatusSign();
 				if($this->gameStatus==1 && count($this->players)<2)
 				{
 					$this->gameStatus=0;
 					$this->lastTime=0;
-					$this->sendToAll("[SG] На арене меньше 2-ух игроков, отсчет остановлен");
+					$this->sendToAll("[SG] There are less than 2 people in the arena, the countdown is stopped");
 					/*foreach($this->players as $pl)
 					{
 						$p=$this->getServer()->getPlayer($pl["id"]);
@@ -138,7 +138,7 @@ class Finecraft_SG extends PluginBase implements Listener
 			}
 			else
 			{
-				$sender->sendMessage("[SG] Ты не в игре !");
+				$sender->sendMessage("[SG] You're not in the game !");
 			}
 			return true;
 		}
@@ -148,13 +148,13 @@ class Finecraft_SG extends PluginBase implements Listener
 		case "set":
 			if($this->config->exists("lastpos"))
 			{
-				$sender->sendMessage("[SG] Уже все установлено, удали конфиг");
+				$sender->sendMessage("[SG] Already everything is set, remove the config");
 			}
 			else
 			{
 				$name=$sender->getName();
 				$this->SetStatus[$name]=0;
-				$sender->sendMessage("[SG] Тыкни таблу");
+				$sender->sendMessage("[SG] Tykni board");
 			}
 			break;
 		case "remove":
@@ -170,10 +170,10 @@ class Finecraft_SG extends PluginBase implements Listener
 			$this->config->remove("lastpos");
 			$this->config->save();
 			unset($this->sign,$this->pos1,$this->pos2,$this->pos3,$this->pos4,$this->pos5,$this->pos6,$this->pos7,$this->pos8,$this->lastpos);
-			$sender->sendMessage("[SG] Все удалено");
+			$sender->sendMessage("[SG] Removed all the positions");
 			break;
 		case "start":
-			$this->sendToAll("[SG] Игра начинается раньше...");
+			$this->sendToAll("[SG] The game starts earlier...");
 			$this->gameStatus=1;
 			$this->lastTime=5;
 			break;
@@ -203,7 +203,8 @@ class Finecraft_SG extends PluginBase implements Listener
 				$this->pos5=new Vector3($this->pos5["x"]+0.5,$this->pos5["y"],$this->pos5["z"]+0.5);
 				$this->pos6=new Vector3($this->pos6["x"]+0.5,$this->pos6["y"],$this->pos6["z"]+0.5);
 				$this->pos7=new Vector3($this->pos7["x"]+0.5,$this->pos7["y"],$this->pos7["z"]+0.5);
-				$this->pos8=new Vector3($this->pos8["x"]+0.5,$this->pos8["y"],$this->pos8["z"]+0.5);
+				$this->pos8=new Vector3($this->pos8["x"]+0.5,$this->pos8["y"],$this->pos8["z"]+0.5);
+
 				$this->lastpos=new Vector3($this->lastpos["x"]+0.5,$this->lastpos["y"],$this->lastpos["z"]+0.5);
 			}
 			if(!$this->config->exists("endTime"))
@@ -232,7 +233,7 @@ class Finecraft_SG extends PluginBase implements Listener
 			$this->SetStatus=array();
 			$this->all=0;
 			$this->config->save();
-			$sender->sendMessage("[SG] Все удалено");
+			$sender->sendMessage("[SG] All removed");
 			break;
 		default:
 			return false;
@@ -321,8 +322,8 @@ class Finecraft_SG extends PluginBase implements Listener
 			break;
 		default:
 			$event->setCancelled();
-			$event->getPlayer()->sendMessage("[SG] Ты на арене, здесь все команды запрещены !");
-			$event->getPlayer()->sendMessage("[SG] Ты можешь написать здесь только /lobby");
+			$event->getPlayer()->sendMessage("[SG] You are in the arena, where all the teams are prohibited !");
+			$event->getPlayer()->sendMessage("[SG] The only allowed command is /lobby");
 			break;
 		}
 		unset($event);
@@ -344,7 +345,7 @@ class Finecraft_SG extends PluginBase implements Listener
 		    	if($this->PlayerIsInGame($player->getName()) && !$this->PlayerIsInGame($killer->getName()) && !$killer->isOp())
 		    	{
 		    		$event->setCancelled();
-		    		$killer->sendMessage("[SG] Не порть людям игру !");
+		    		$killer->sendMessage("[SG] Do not spoil people their game!");
 		    		$killer->kill();
 		    	}
 		    }
@@ -421,24 +422,24 @@ class Finecraft_SG extends PluginBase implements Listener
 			case 30:
 			case 40:
 			case 50:
-				$this->sendToAll("[SG] Игра начнется через ".$this->lastTime." сек.");
+				$this->sendToAll("[SG] The game will start in ".$this->lastTime." seconds.");
 				break;
 			case 60:
-				$this->sendToAll("[SG] Игра начнется через минуту.");
+				$this->sendToAll("[SG] The game starts in less then a minute.");
 				break;
 			case 90:
-				$this->sendToAll("[SG] Игра начнется через минуту и 30 сек.");
+				$this->sendToAll("[SG] The game starts in 1 minute and 30 seconds.");
 				break;
 			case 120:
-				$this->sendToAll("[SG] Игра начнется через 2 минуты.");
+				$this->sendToAll("[SG] The game will start in 2 minutes.");
 				break;
 			case 150:
-				$this->sendToAll("[SG] Игра начнется через 2 минуты и 30 сек.");
+				$this->sendToAll("[SG] The game will start in 2 minutes and 30 seconds.");
 				break;
 			case 0:
 				$this->gameStatus=2;
-				$this->sendToAll("[SG] Игра началась !");
-				$this->sendToAll("[SG] Вы неуязвимы 15 сек !");
+				$this->sendToAll("[SG] The game has begun !");
+				$this->sendToAll("[SG] You are invincible for 15 seconds!");
 				$this->lastTime=$this->godTime;
 				$this->resetChest();
 				foreach($this->players as $key=>$val)
@@ -458,7 +459,7 @@ class Finecraft_SG extends PluginBase implements Listener
 			if($this->lastTime<=0)
 			{
 				$this->gameStatus=3;
-				$this->sendToAll("[SG] Неуязвимость кончилась !");
+				$this->sendToAll("[SG] Invulnerability is over!");
 				$this->lastTime=$this->gameTime;
 			}
 		}
@@ -469,7 +470,7 @@ class Finecraft_SG extends PluginBase implements Listener
 				foreach($this->players as &$pl)
 				{
 					$p=$this->getServer()->getPlayer($pl["id"]);
-					Server::getInstance()->broadcastMessage("[SG] Поздравляем игрока ".$p->getName()." с победой в игре !");
+					Server::getInstance()->broadcastMessage("[SG] congratulations to the player ".$p->getName()." winning the game!!");
 					$p->setLevel($this->signlevel);
 					$p->getInventory()->clearAll();
 					$p->setMaxHealth(20);
@@ -485,7 +486,7 @@ class Finecraft_SG extends PluginBase implements Listener
 			}
 			else if(count($this->players)==0)
 			{
-				Server::getInstance()->broadcastMessage("[SG] Игра окончена , т.к. все игроки умерли !");
+				Server::getInstance()->broadcastMessage("[SG] Game over, because all the players are dead !");
 				$this->gameStatus=0;
 				$this->lastTime=0;
 				$this->clearChest();
@@ -504,39 +505,39 @@ class Finecraft_SG extends PluginBase implements Listener
 			case 4:
 			case 5:
 			case 10:
-				$this->sendToAll("[SG] До Смертельного Боя ".$this->lastTime." сек.");
+				$this->sendToAll("[SG] Until Deathmatch ".$this->lastTime." seconds.");
 				break;
 			case 100:
 				$this->clearChest();
  				$this->resetChest();
-				$this->sendToAll("[SG] Все Сундуки Заполнены!");
+				$this->sendToAll("[SG] All the chests are refilled!");
 				break;
 			case 101:
-				$this->sendToAll("[SG] До Заполнения Сундуков 1 секунда!");
+				$this->sendToAll("[SG] Chests are refilling in 1 second!");
 				break;
 			case 102:
-				$this->sendToAll("[SG] До Заполнения Сундуков 2 секунды!");
+				$this->sendToAll("[SG] Chests are refilling in 2 seconds!");
 				break;
 			case 103:
-				$this->sendToAll("[SG] До Заполнения Сундуков 3 секунды!");
+				$this->sendToAll("[SG] Chests are refilling in 3 seconds!");
 				break;
 			case 104:
-				$this->sendToAll("[SG] До Заполнения Сундуков 4 секунды!");
+				$this->sendToAll("[SG] Chests are refilling in 4 seconds!");
 				break;
 			case 105:
-				$this->sendToAll("[SG] До Заполнения Сундуков 5 секунд!");
+				$this->sendToAll("[SG] Chests are refilling in 5 seconds!");
 				break;
 			case 110:
-				$this->sendToAll("[SG] До Заполнения Сундуков 10 сек!");
+				$this->sendToAll("[SG] Chests are refilling in 10 seconds!");
 				break;
 			case 120:
-				$this->sendToAll("[SG] До Заполнения Сундуков 20 сек!");
+				$this->sendToAll("[SG] Chests are refilling in 20 seconds!");
 				break;
 			case 130:
-				$this->sendToAll("[SG] До Заполнения Сундуков 30 сек!");
+				$this->sendToAll("[SG] Chests are refilling in 30 second!");
 				break;
 			case 0:
-				$this->sendToAll("[SG] Смертельный Бой начался !");
+				$this->sendToAll("[SG] Deathmatch has begun!");
 				foreach($this->players as $pl)
 				{
 					$p=$this->getServer()->getPlayer($pl["id"]);
@@ -562,10 +563,10 @@ class Finecraft_SG extends PluginBase implements Listener
 			case 10:
 			case 20:
 			case 30:
-				$this->sendToAll("[SG] До конца игры ".$this->lastTime." сек.");
+				$this->sendToAll("[SG] The game is ending in ".$this->lastTime." seconds");
 				break;
 			case 0:
-				Server::getInstance()->broadcastMessage("[SG] Время вышло, игра закончилась !");
+				Server::getInstance()->broadcastMessage("[SG] Time is up, the game is over !");
 				foreach($this->players as $pl)
 				{
 					$p=$this->getServer()->getPlayer($pl["id"]);
@@ -619,9 +620,9 @@ class Finecraft_SG extends PluginBase implements Listener
 				unset($this->players[$event->getEntity()->getName()]);
 				if(count($this->players)>1)
 				{
-					$this->sendToAll("§l§e[SG] Игрок {$event->getEntity()->getName()} умер!");
-					$this->sendToAll("§l§e[SG] Осталось Игроков:".count($this->players));
-					$this->sendToAll("§l§e[SG] Осталось Времени:".$this->lastTime." сек.");
+					$this->sendToAll("§l§e[SG] Player {$event->getEntity()->getName()} died!");
+					$this->sendToAll("§l§e[SG] Remaining players:".count($this->players));
+					$this->sendToAll("§l§e[SG] Time left:".$this->lastTime." seconds.");
 				}
 				$this->changeStatusSign();
 			}
@@ -641,19 +642,19 @@ class Finecraft_SG extends PluginBase implements Listener
 			switch($this->gameStatus)
 			{
 			case 0:
-				$sign->setText("§l§e《[SG]》","§l§aЖмякни!","§l§aИгроков:".count($this->players),"");
+				$sign->setText("§l§e《[SG]》","§l§aZhmyakni!","§l§aplayers:".count($this->players),"");
 				break;
 			case 1:
-				$sign->setText("§l§e《[SG]》","§l§aЖмякни!","§l§aИгроков:".count($this->players),"§l§bВремени:".$this->lastTime."сек.");
+				$sign->setText("§l§e《[SG]》","§l§aZhmyakni!","§l§aplayers:".count($this->players),"§l§bTime:".$this->lastTime."Seconds.");
 				break;
 			case 2:
-				$sign->setText("§l§e《[SG]》","§l§dСкоро Начало","§l§aИгроков:".count($this->players),"§l§bВремени:".$this->lastTime."сек.");
+				$sign->setText("§l§e《[SG]》","§l§dStart Soon","§l§aplayers:".count($this->players),"§l§bTime:".$this->lastTime."seconds.");
 				break;
 			case 3:
-				$sign->setText("§l§e《[SG]》","§l§fИдет Игра","§l§aИгроков:".count($this->players)."/{$this->all}","§l§bВремени:".$this->lastTime."сек.");
+				$sign->setText("§l§e《[SG]》","§l§fGame in progress","§l§aplayers:".count($this->players)."/{$this->all}","§l§bTime:".$this->lastTime."seconds.");
 				break;
 			case 4:
-				$sign->setText("§l§e《[SG]》","§l§cСБ","§l§aИгроков :".count($this->players)."/{$this->all}","§l§bВремени :".$this->lastTime."сек.");
+				$sign->setText("§l§e《[SG]》","§l§cSafe","§l§aplayers :".count($this->players)."/{$this->all}","§l§bTime:".$this->lastTime."seconds.");
 				break;
 			}
 		}
@@ -672,7 +673,7 @@ class Finecraft_SG extends PluginBase implements Listener
 
 				if($event->getBlock()->getID() != 63 && $event->getBlock()->getID() != 68)
 				{
-					$player->sendMessage(TextFormat::GREEN."[SG] Тыкни сигну");
+					$player->sendMessage(TextFormat::GREEN."[SG] Tyknite Signe.");
 					return;
 				}
 				$this->sign=array(
@@ -683,8 +684,8 @@ class Finecraft_SG extends PluginBase implements Listener
 				$this->config->set("sign",$this->sign);
 				$this->config->save();
 				$this->SetStatus[$username]++;
-				$player->sendMessage(TextFormat::GREEN."[SG] Сигна записана");
-				$player->sendMessage(TextFormat::GREEN."[SG] Тыкни 1 спавн");
+				$player->sendMessage(TextFormat::GREEN."[SG] Sign saved");
+				$player->sendMessage(TextFormat::GREEN."[SG] Tyknite 1 spawn");
 				$this->signlevel=$this->getServer()->getLevelByName($this->config->get("sign")["level"]);
 				$this->sign=new Vector3($this->sign["x"],$this->sign["y"],$this->sign["z"]);
 
@@ -699,8 +700,8 @@ class Finecraft_SG extends PluginBase implements Listener
 				$this->config->set("pos1",$this->pos1);
 				$this->config->save();
 				$this->SetStatus[$username]++;
-				$player->sendMessage(TextFormat::GREEN."[SG] 1 спавн записан");
-				$player->sendMessage(TextFormat::GREEN."[SG] Тыкни 2-ой");
+				$player->sendMessage(TextFormat::GREEN."[SG] 1 spawn saved");
+				$player->sendMessage(TextFormat::GREEN."[SG] Tyknite 2nd");
 				$this->pos1=new Vector3($this->pos1["x"]+0.5,$this->pos1["y"],$this->pos1["z"]+0.5);
 				break;
 			case 2:
@@ -712,8 +713,8 @@ class Finecraft_SG extends PluginBase implements Listener
 				$this->config->set("pos2",$this->pos2);
 				$this->config->save();
 				$this->SetStatus[$username]++;
-				$player->sendMessage(TextFormat::GREEN."[SG] 2-ой записан");
-				$player->sendMessage(TextFormat::GREEN."[SG] Тыкни 3-ий");
+				$player->sendMessage(TextFormat::GREEN."[SG] 2nd recorded");
+				$player->sendMessage(TextFormat::GREEN."[SG] Tyknite 3rd");
 				$this->pos2=new Vector3($this->pos2["x"]+0.5,$this->pos2["y"],$this->pos2["z"]+0.5);
 				break;	
 			case 3:
@@ -725,8 +726,8 @@ class Finecraft_SG extends PluginBase implements Listener
 				$this->config->set("pos3",$this->pos3);
 				$this->config->save();
 				$this->SetStatus[$username]++;
-				$player->sendMessage(TextFormat::GREEN."[SG] 3-ий записан");
-				$player->sendMessage(TextFormat::GREEN."[SG] Тыкни 4-ый");
+				$player->sendMessage(TextFormat::GREEN."[SG] 3rd written");
+				$player->sendMessage(TextFormat::GREEN."[SG] Tyknite 4th");
 				$this->pos3=new Vector3($this->pos3["x"]+0.5,$this->pos3["y"],$this->pos3["z"]+0.5);
 				break;	
 			case 4:
@@ -738,8 +739,8 @@ class Finecraft_SG extends PluginBase implements Listener
 				$this->config->set("pos4",$this->pos4);
 				$this->config->save();
 				$this->SetStatus[$username]++;
-				$player->sendMessage(TextFormat::GREEN."[SG] 4-ый записан");
-				$player->sendMessage(TextFormat::GREEN."[SG] Тыкни 5-ый");
+				$player->sendMessage(TextFormat::GREEN."[SG] 4th recorded");
+				$player->sendMessage(TextFormat::GREEN."[SG] Tyknite 5th");
 				$this->pos4=new Vector3($this->pos4["x"]+0.5,$this->pos4["y"],$this->pos4["z"]+0.5);
 				break;
 			case 5:
@@ -751,8 +752,8 @@ class Finecraft_SG extends PluginBase implements Listener
 				$this->config->set("pos5",$this->pos5);
 				$this->config->save();
 				$this->SetStatus[$username]++;
-				$player->sendMessage(TextFormat::GREEN."[SG] 5-ый записан");
-				$player->sendMessage(TextFormat::GREEN."[SG] Тыкни 6-ой");
+				$player->sendMessage(TextFormat::GREEN."[SG] 5th written");
+				$player->sendMessage(TextFormat::GREEN."[SG] Tyknite 6th");
 				$this->pos5=new Vector3($this->pos5["x"]+0.5,$this->pos5["y"],$this->pos5["z"]+0.5);
 				break;
 			case 6:
@@ -764,8 +765,8 @@ class Finecraft_SG extends PluginBase implements Listener
 				$this->config->set("pos6",$this->pos6);
 				$this->config->save();
 				$this->SetStatus[$username]++;
-				$player->sendMessage(TextFormat::GREEN."[SG] 6-ой записан");
-				$player->sendMessage(TextFormat::GREEN."[SG] Тыкни 7-ой");
+				$player->sendMessage(TextFormat::GREEN."[SG] Second recorded");
+				$player->sendMessage(TextFormat::GREEN."[SG] Tyknite 7th");
 				$this->pos6=new Vector3($this->pos6["x"]+0.5,$this->pos6["y"],$this->pos6["z"]+0.5);
 				break;
 			case 7:
@@ -777,8 +778,8 @@ class Finecraft_SG extends PluginBase implements Listener
 				$this->config->set("pos7",$this->pos7);
 				$this->config->save();
 				$this->SetStatus[$username]++;
-				$player->sendMessage(TextFormat::GREEN."[SG] 7-ой записан");
-				$player->sendMessage(TextFormat::GREEN."[SG] Тыкни 8-ой");
+				$player->sendMessage(TextFormat::GREEN."[SG] 7th recorded");
+				$player->sendMessage(TextFormat::GREEN."[SG] Tyknite 8th");
  
 				$this->pos7=new Vector3($this->pos7["x"]+0.5,$this->pos7["y"],$this->pos7["z"]+0.5);
 				break;	
@@ -791,8 +792,8 @@ class Finecraft_SG extends PluginBase implements Listener
 				$this->config->set("pos8",$this->pos8);
 				$this->config->save();
 				$this->SetStatus[$username]++;
-				$player->sendMessage(TextFormat::GREEN."[SG] 8-ой записан");
-				$player->sendMessage(TextFormat::GREEN."[SG] Тыкни спавн СБ");
+				$player->sendMessage(TextFormat::GREEN."[SG] 8th recorded");
+				$player->sendMessage(TextFormat::GREEN."[SG] Tyknite safe spawn");
 				$this->pos8=new Vector3($this->pos8["x"]+0.5,$this->pos8["y"],$this->pos8["z"]+0.5);
 				break;
 			case 9:
@@ -805,8 +806,8 @@ class Finecraft_SG extends PluginBase implements Listener
 				$this->config->save();
 				$this->lastpos=new Vector3($this->lastpos["x"]+0.5,$this->lastpos["y"],$this->lastpos["z"]+0.5);
 				unset($this->SetStatus[$username]);
-				$player->sendMessage(TextFormat::GREEN."[SG] Спавн СБ готов");
-				$player->sendMessage(TextFormat::GREEN."[SG] Ты уже можеш играть!");
+				$player->sendMessage(TextFormat::GREEN."[SG] Spawn sat ready");
+				$player->sendMessage(TextFormat::GREEN."[SG] You can already play!");
 				$this->level=$this->getServer()->getLevelByName($this->config->get("pos1")["level"]);					
 			}
 		}
@@ -817,12 +818,12 @@ class Finecraft_SG extends PluginBase implements Listener
 			{
 				if(!$this->config->exists("lastpos"))
 				{
-					$event->getPlayer()->sendMessage("[SG] Ты не можешь зайти, спавн СБ не установлен");
+					$event->getPlayer()->sendMessage("[SG] You can not go, Sat spawn is not installed");
 					return;
 				}
 				if(!$event->getPlayer()->hasPermission("FSurvivalGame.touch.startgame"))
 				{
-					$event->getPlayer()->sendMessage("[SG] У тебя нет разрешения заходить на арену");
+					$event->getPlayer()->sendMessage("[SG] You do not have permission to enter the arena");
 					return;
 				}
 				if(!$event->getPlayer()->isOp())
@@ -832,7 +833,7 @@ class Finecraft_SG extends PluginBase implements Listener
     				{
     					if($inv->getItem($i)->getID()!=0)
     					{
-    						$event->getPlayer()->sendMessage("[SG] Перед игрой выкинь все свои вещи !");
+    						$event->getPlayer()->sendMessage("[SG] Before the game, drop all you're stuff!");
     						return;
     					}
     				}
@@ -840,7 +841,7 @@ class Finecraft_SG extends PluginBase implements Listener
     				{
     					if($i->getID()!=0)
     					{
-    						$event->getPlayer()->sendMessage("[SG] Перед игрой выкинь всю свою экипировку !");
+    						$event->getPlayer()->sendMessage("[SG] Before the game, drop all you're gear!");
     						return;
     					}
     				}
@@ -851,33 +852,33 @@ class Finecraft_SG extends PluginBase implements Listener
 					{
 						if(count($this->players)>=8)
 						{
-							$event->getPlayer()->sendMessage("[SG] Арена полная, ждите окончания игры !");
+							$event->getPlayer()->sendMessage("[SG] Arena full, wait for the game to end!");
 							return;
 						}
-						$this->sendToAll("[SG] ".$event->getPlayer()->getName()." зашел на арену.");
+						$this->sendToAll("[SG] ".$event->getPlayer()->getName()." I walked into the arena.");
 						$this->players[$event->getPlayer()->getName()]=array("id"=>$event->getPlayer()->getName());
-						$event->getPlayer()->sendMessage("[SG] Вы присоеденились к игре");
+						$event->getPlayer()->sendMessage("[SG] You have joined the game");
 						if($this->gameStatus==0 && count($this->players)>=2)
 						{
 							$this->gameStatus=1;
 							$this->lastTime=$this->waitTime;
-							$this->sendToAll("[SG] Отсчет начался!");
+							$this->sendToAll("[SG] The countdown has begun!");
 						}
 						if(count($this->players)==8 && $this->gameStatus==1 && $this->lastTime>5)
 						{
-							$this->sendToAll("[SG] Арена полная, начнинаем раньше!");
+							$this->sendToAll("[SG] Arena full, started early!");
 							$this->lastTime=5;
 						}
 						$this->changeStatusSign();
 					}
 					else
 					{
-						$event->getPlayer()->sendMessage("[SG] Если ты хочешь покинуть арену - введи /lobby");
+						$event->getPlayer()->sendMessage("[SG] If you want to leave the arena - type /lobby");
 					}
 				}
 				else
 				{
-					$event->getPlayer()->sendMessage("[SG] Вы не можете войти, т.к. игра уже идет!");
+					$event->getPlayer()->sendMessage("[SG] You can not enter the game. the game is already underway!");
 				}
 			}
 		}
@@ -919,13 +920,13 @@ class Finecraft_SG extends PluginBase implements Listener
 		{	
 			unset($this->players[$event->getPlayer()->getName()]);
 			$this->ClearInv($event->getPlayer());
-			$this->sendToAll("[SG] ".$event->getPlayer()->getName()." покинул арену.");
+			$this->sendToAll("[SG] ".$event->getPlayer()->getName()." left the arena.");
 			$this->changeStatusSign();
 			if($this->gameStatus==1 && count($this->players)<2)
 			{
 				$this->gameStatus=0;
 				$this->lastTime=0;
-				$this->sendToAll("[SG] На арене 1 игрок, отсчет остановлен!");
+				$this->sendToAll("[SG] There are less than 2 people in the arena, the countdown is stopped");
 				/*foreach($this->players as $pl)
 				{
 					$p=$this->getServer()->getPlayer($pl["id"]);
@@ -938,7 +939,7 @@ class Finecraft_SG extends PluginBase implements Listener
 	}
 	
 	public function onDisable(){
-		$this->getServer()->getLogger()->info(TextFormat::RED."[Finecraft_SG] Выключено !");
+		$this->getServer()->getLogger()->info(TextFormat::RED."[Finecraft_SG] Unloaded !");
 	}
 }
 ?>
